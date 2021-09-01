@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-6bjq#a70%3^&v(!#%2*_2$kr5s_c$tab@@f-i5$vf)d@vcd!#f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -149,7 +149,6 @@ SIMPLE_JWT = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
-ALLOWED_HOSTS = ['*']
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
