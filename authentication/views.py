@@ -46,3 +46,10 @@ class DummyProtectedView(APIView):
 
     def get(self, request):
         return Response(data={"Authenticated Inside":"Auth"}, status=status.HTTP_200_OK)
+
+class UnprotectedView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        print("Inside")
+        return Response(data={"Unprotected":"No Auth needed"}, status=status.HTTP_200_OK)

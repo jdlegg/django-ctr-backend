@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(Score)
 admin.site.register(WebFlagMaster)
+admin.site.register(Flags)

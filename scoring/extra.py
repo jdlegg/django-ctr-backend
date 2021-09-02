@@ -250,3 +250,58 @@ class IndividualScoreSerializer(serializers.ModelSerializer):
 #             "flag_points": master_flag[0].points,
 #         })
 #         return context
+
+class VerifyFlag(APIView):
+    def post(self, request):
+        #print("DEBUG request Flag: ", request.data['flag'])
+        #print("DEBUG request name: ", request.data['name'])
+        #print(request.user)
+        obj1 = Flags.objects.get(user=request.user)
+        obj_flag = obj1.flag.all()
+        obj = WebFlagMaster.objects.filter(flag=request.data['flag'])
+        print(obj_flag[0].name)
+        print(obj[0].name)
+        if (obj_flag[0].name != obj[0].name):
+            user = Score.objects.get(user=request.user)
+            user.points = user.points + obj[0].points
+            user.save()
+            list = (obj1[0].id, obj)
+            obj1.flag.add(list)
+            return response.Response(data={"Authenticated Inside":"Scoring - IndScoreView"}, status=status.HTTP_200_OK)
+        else:
+            return response.Response(data={"Already Solved":"DEBUG!!"}, status=status.HTTP_200_OK)
+
+        #print("DEBUG FlagMaster Name: ", obj[0].name)
+        #print("DEBUG FlagMaster points: ",obj[0].points)
+        #print("DEBUG FlagMaster flag: ",obj[0].flag)
+        #print(user)
+        #print(user.points)
+        #print(user.points)
+
+
+
+class HighScoreList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    queryset = Score.objects.all()
+    serializer_class = HighScoreSerializer
+
+class UserHighScoreList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = HighScoreSerializer
+
+    def get_queryset(self):
+        return Score.objects.filter(user=self.request.user)
+
+
+class HighScoreSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model=Score
+        fields = ('points', 'slug')
+
+class TestSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model=Flags
+        fields = '__all__'
+        depth=1
