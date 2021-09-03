@@ -147,7 +147,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 CORS_ALLOWED_ORIGINS = [
-    "https://jdlegg.github.io/react-ctf-frontend/",
+    "https://jdlegg.github.io/react-ctf-frontend",
     "http://localhost:3002",
     "http://localhost:3001",
     "http://localhost:3000",
