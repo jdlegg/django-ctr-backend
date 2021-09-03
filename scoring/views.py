@@ -9,7 +9,7 @@ from .serializers import *
 from django.db.models import Prefetch, query
 
 class ListUserFlags(generics.ListCreateAPIView):
-    #permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
     
@@ -17,7 +17,7 @@ class ListUserFlags(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 class IndividualUserFlags(generics.RetrieveUpdateDestroyAPIView):
-    #permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = UserFlagSerializer
     lookup_field = 'slug'
     
@@ -25,12 +25,12 @@ class IndividualUserFlags(generics.RetrieveUpdateDestroyAPIView):
         return Score.objects.filter(slug=self.kwargs['slug'])
 
 class ListFlags(generics.ListCreateAPIView):
-    #permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = FlagsSerializer
     queryset = Flags.objects.all().order_by('id')
 
 class UpdateFlags(generics.RetrieveUpdateDestroyAPIView):
-    #permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = FlagsSerializer
     lookup_field = 'id'
 
@@ -38,13 +38,16 @@ class UpdateFlags(generics.RetrieveUpdateDestroyAPIView):
         return Flags.objects.filter(id=self.kwargs['id'])
 
 class HighScoreList(generics.GenericAPIView):
-    #permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        data_resp = {}
+        data_resp = []
         items = Score.objects.all()
         for i in items:
-            data_resp[i.slug] = i.points_total()
+            data = {}
+            data['username'] = i.slug
+            data['points'] = i.points_total()
+            data_resp.append(data)
         print(data_resp)
         return Response(data_resp, status=status.HTTP_200_OK)
 
@@ -52,12 +55,13 @@ class IndividualScore(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        data_resp = {}
+        data_resp = []
         items = Score.objects.filter(user=request.user)
         for i in items:
-            data_resp[i.slug] = i.points_total()
+            data_resp.append(i.points_total())
         print(data_resp)
         return Response(data_resp, status=status.HTTP_200_OK)
+
 
 class VerifyFlagOld(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
