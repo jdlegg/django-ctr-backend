@@ -146,7 +146,13 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+CORS_ALLOWED_ORIGINS = [
+    "https://jdlegg.github.io/react-ctf-frontend/",
+    "http://localhost:3002/",
+    "http://localhost:3001/",
+    "http://localhost:3000/",
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 django_heroku.settings(locals())

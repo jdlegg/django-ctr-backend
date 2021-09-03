@@ -97,7 +97,6 @@ class VerifyFlag(APIView):
 
         return Response(data={"Already Solved":"DEBUG!!"}, status=status.HTTP_200_OK)
 
-
 class VerifyChallenge(generics.RetrieveAPIView):   
 
     def get(self, request, **kwargs):
