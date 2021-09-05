@@ -1,15 +1,13 @@
-import json
-from rest_framework.status import HTTP_412_PRECONDITION_FAILED
 from rest_framework.views import APIView
 from .models import *
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from django.http import JsonResponse
+
 from .serializers import *
-from django.db.models import Prefetch, query
+
 
 class ListUserFlags(generics.ListCreateAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     queryset = Score.objects.all()
     serializer_class = ScoreSerializer
     
@@ -17,7 +15,7 @@ class ListUserFlags(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 class IndividualUserFlags(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     serializer_class = UserFlagSerializer
     lookup_field = 'slug'
     
@@ -25,12 +23,12 @@ class IndividualUserFlags(generics.RetrieveUpdateDestroyAPIView):
         return Score.objects.filter(slug=self.kwargs['slug'])
 
 class ListFlags(generics.ListCreateAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     serializer_class = FlagsSerializer
     queryset = Flags.objects.all().order_by('id')
 
 class UpdateFlags(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     serializer_class = FlagsSerializer
     lookup_field = 'id'
 
@@ -38,7 +36,7 @@ class UpdateFlags(generics.RetrieveUpdateDestroyAPIView):
         return Flags.objects.filter(id=self.kwargs['id'])
 
 class HighScoreList(generics.GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
         data_resp = []
@@ -52,7 +50,7 @@ class HighScoreList(generics.GenericAPIView):
         return Response(data_resp, status=status.HTTP_200_OK)
 
 class IndividualScore(generics.GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
         data_resp = []
@@ -61,22 +59,6 @@ class IndividualScore(generics.GenericAPIView):
             data_resp.append(i.points_total())
         print(data_resp)
         return Response(data_resp, status=status.HTTP_200_OK)
-
-
-class VerifyFlagOld(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = UserFlagSerializer
-    lookup_field = 'slug'
-    
-    def get_queryset(self):
-        return Score.objects.filter(slug=self.kwargs['slug'])
-    
-    def post(self, request):
-        serializer = UserFlagSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
 
 class VerifyFlag(APIView):   
 
@@ -107,3 +89,14 @@ class VerifyChallenge(generics.RetrieveAPIView):
             if (o.name == kwargs.get('name')):
                  return Response(data={"Already Solved VerifyChallenge":"DEBUG!!"}, status=status.HTTP_200_OK)
         return Response(data={"Not Solved! VerifyChallenge":"DEBUG!!"}, status=status.HTTP_202_ACCEPTED)
+
+class CheckRegister(generics.RetrieveAPIView):   
+
+    def get(self, request):
+        val = request.user.username
+        try:
+            Score.objects.get(user=request.user)
+            return Response(data={True}, status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response(data={False}, status=status.HTTP_202_ACCEPTED)
+        

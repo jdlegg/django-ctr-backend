@@ -10,7 +10,7 @@ from django.db import IntegrityError
 from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 
 class ObtainTokenPariWithColorView(TokenObtainPairView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
 
 class CustomUserCreate(APIView):
@@ -29,7 +29,7 @@ class CustomUserCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutAndBlacklistRefreshTokenForUserView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    #permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
 
     def post(self, request):
