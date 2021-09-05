@@ -152,6 +152,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3002",
     "http://localhost:3001",
     "http://localhost:3000",
+    "https://react-ctf-frontend.herokuapp.com",
 ]
 
 #CORS_ALLOW_ALL_ORIGINS = True
